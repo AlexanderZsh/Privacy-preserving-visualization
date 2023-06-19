@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>KG4Vis: A Knowledge Graph-Based Approach for Visualization Recommendation</title>
+        <title>Don't Peek at My Chart: Privacy-preserving Visualization for Mobile Devices</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="./css/bootstrap.css" rel="stylesheet">
         <link href="./css/slider.css" rel="stylesheet">
@@ -14,53 +14,63 @@
                 <div class="row">
                     <div class="span10">
                         <div id="header">
-                            <h1 style="padding-left:0; color:black;font-size:30px"><i>KG4Vis</i>: A Knowledge Graph-Based Approach for Visualization Recommendation</h1>
+                            <h1 style="padding-left:0; color:black;font-size:30px">Don't Peek at My Chart: Privacy-preserving Visualization for Mobile Devices</h1>
                             <h4 style="padding-left: 0">
-                                <a href="https://haotian-li.com/" target="_blank">Haotian Li</a>
+                                <a href="https://alexanderzsh.github.io/" target="_blank">Songheng Zhang</a>
+                                , <a href="https://www.dongma.info/" target="_blank">Dong Ma</a>
                                 , <a href="http://yong-wang.org/" target="_blank">Yong Wang</a>
-                                , <a href="" target="_blank">Songheng Zhang</a>
-                                , <a href="https://www.cse.ust.hk/~yqsong/" target="_blank">Yangqiu Song</a>
-                                , <a href="http://huamin.org/" target="_blank">Huamin Qu</a>
                             </h4>
                         </div>
                         <br>
                         <div id="figures">
-                            <img alt="" src="./files/Teaser.png" class="img-polaroid img-responsive img-thumbnail" style="margin-left: 7%" width="80%">
-                            <p style="text-align:justify; margin-top: 20px;">This figure illustrates the overall workflow of KG4Vis. We extract features from existing dataset-visualization pairs and construct a knowledge graph (KG). Then the embeddings of entities and relations in the KG are learned. Based on the embeddings, we conduct inference on a new dataset and finally recommend multiple visualizations. Also, various rules are extracted based on the embeddings and presented together with recommended visualizations to improve the interpretability of visualization recommendation.</p>
+                            <img alt="" src="./files/Teaser.svg" class="img-polaroid img-responsive img-thumbnail"  width="80%" style="margin-left: 7%">
+                            <p style="text-align:justify; margin-top: 20px;">An example application scenario of our privacy-preserving visualization on a smartphone. The data owner (left side) in proximity can see the privacy-preserving visualization displayed on the smartphone, while the shoulder surfer (right side) at a far distance can not interpret the visualization content.</p>
                         </div>
                         <div id="description">
                             <h3>Description</h3>
-                            <p style="text-align:justify">Visualization recommendation or automatic visualization generation can significantly lower the barriers for general users to rapidly create effective data visualizations, especially for those users without a background in data visualizations. However, existing rule-based approaches require tedious manual specifications of visualization rules by visualization experts. Other machine learning-based approaches often work like black-box and are difficult to understand why a specific visualization is recommended, limiting the wider adoption of these approaches. This paper fills the gap by presenting <i>KG4Vis</i>, a knowledge graph (KG)-based approach for visualization recommendation. It does not require manual specifications of visualization rules and can also guarantee good explainability. Specifically, we propose a framework for building knowledge graphs, consisting of three types of entities (i.e., data features, data columns and visualization design choices) and the relations between them, to model the mapping rules between data and effective visualizations. A TransE-based embedding technique is employed to learn the embeddings of both entities and relations of the knowledge graph from existing dataset-visualization pairs. Such embeddings intrinsically model the desirable visualization rules. Then, given a new dataset, effective visualizations can be inferred from the knowledge graph with semantically meaningful rules. We conducted extensive evaluations to assess the proposed approach, including quantitative comparisons, case studies and expert interviews. The results demonstrate the effectiveness of our approach. </p>
+                            <p style="text-align:justify">Data visualizations have been widely used on mobile devices like smartphones for various tasks (e.g., visualizing personal health and financial data), making it convenient for people to view such data anytime and anywhere. However, others nearby can also easily peek at the visualizations, resulting in personal data disclosure. In this paper, we propose a perception-driven approach to transform mobile data visualizations into privacy-preserving ones. Specifically, based on human visual perception, we develop a masking scheme to adjust the spatial frequency and luminance contrast of colored visualizations. The resulting visualization retains its original information in close proximity but reduces visibility when viewed from a certain distance or farther away. We conducted two user studies to inform the design of our approach (N=16) and systematically evaluate its performance (N=18), respectively. The results demonstrate the effectiveness of our approach in terms of privacy preservation for mobile data visualizations. </p>
                         </div>
                         <div id="materials">
                             <h3>Materials</h3>
                             <div class="materials">
-                                <a href="https://arxiv.org/pdf/2107.12548.pdf" class="link" target="_blank">PDF</a>
-                                | <a href="https://github.com/KG4VIS/Knowledge-Graph-4-VIS-Recommendation" class="link" target="_blank">GitHub</a>
-                                | <a href="./files/kg4vis_supple.pdf" class="link" target="_blank">Supplementary</a>
-                                | <a href="./files/kg4vis_poster.pdf" class="link" target="_blank">Poster</a>
-                                | <a href="https://kg4vis.s3.us-east-2.amazonaws.com/corpus.zip" class="link" target="_blank">Corpus</a>
-                                | <a href="https://kg4vis.s3.us-east-2.amazonaws.com/feature.zip" class="link" target="_blank">Features</a>
+                                <a href="./files/EuroVis23_Songheng_Visualization_Privacy.pdf" class="link" target="_blank">PDF</a>
+                                |   <a href="https://github.com/AlexanderZsh/Privacy-preserving-visualization" class="link" target="_blank">GitHub</a>
+                                |   <a href="./files/EuroVis23.pdf" class="link" target="_blank">Slides(pdf)</a>
+                                |   <a href="./files/EuroVis23.pptx" class="link" target="_blank">Slides(ppt)</a>
+                                |   <a href="https://youtu.be/FjSQ-WkHsKU" class="link" target="_blank">Talk Video</a>
                             </div>
                         </div>
                         <div id="publication">
                             <h3>Publication</h3>
-                            <p>Haotian Li, Yong Wang, Songheng Zhang, Yangqiu Song and Huamin Qu. 2021. KG4Vis: A Knowledge Graph-Based Approach for Visualization Recommendation. IEEE Transactions on Visualization and Computer Graphics (Proceedings of IEEE VIS 2021). To Appear.</p>
+                            <p>Songheng Zhang, Dong Ma, Yong Wang. 2023. Don't Peek at My Chart: Privacy-preserving Visualization for Mobile Devices. Computer Graphics Forum (Proceedings of EuroVis 2023). To Appear.</p>
+                        </div>
+                        <div id="videos">
+                            <h3>Videos</h3>
+                            <h4>Fastforward Video in EuroVis 2023</h4>
+                            <div>
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/qUxZNBy0wpA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin-left: 10%"></iframe>
+                            </div>
+                            <h4>Presentation Video in EuroVis 2023</h4>
+                            <div>
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/FjSQ-WkHsKU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin-left: 10%"></iframe>
+                            </div>
                         </div>
                         <div id="acknowledgements">
                             <h3>Acknowledgements</h3>
-                            <p>This research was supported by the Singapore Ministry of Education (MOE) Academic Research Fund (AcRF) Tier 1 grant (Grant number: 20-C220-SMU-011). We would like to thank the experts in our expert interviews and anonymous reviewers for their feedback. We also would like to thank <a href="http://kzh.space/" class="link" target="_blank">Dr. Kevin Hu</a> for granting us the permission of using and open-sourcing the code and dataset in <a href="https://vizml.media.mit.edu/" class="link" target="_blank">VizML</a>, and <a href="https://yz-cai.github.io/" class="link" target="_blank">Mr. Yuzheng Cai</a> for making the original version of the amazing poster in <a href="http://simingchen.me/" class="link" target="_blank">Dr. Siming Chen</a>'s visualization course in Fudan University.
-                            </p>
+                            <p>This research was supported by Lee Kong Chian Fellowship and the Singapore Ministry of Education (MOE) Academic Research Fund (AcRF) Tier 2 grant (Grant number: T2EP20222-0049). We would like to thank the participants in our user study and the anonymous reviewers for their valuable feedback.</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="footer">
                 <div class="footer_resize">
-                    <p class="lf">Copyright © 2021 Haotian Li. All Rights Reserved.</p>
+                    <p class="lf">Copyright © 2023 Songheng Zhang. All Rights Reserved.</p>
                 </div>
                 <div class="clr"></div>
             </div>
         </div>
     </body>
 </html>
+
+
+
