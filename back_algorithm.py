@@ -20,36 +20,7 @@ from textwrap import wrap
 from tkinter import N
 from scipy.ndimage.morphology import distance_transform_edt
 
-import colour
 
-
-
-# Helper functions
-def lch2rgb(lch_arr):
-    """
-    Converts LCH color space to RGB color space.
-
-    Args:
-        lch_arr (np.ndarray): Input array in LCH color space.
-
-    Returns:
-        np.ndarray: Output array in RGB color space.
-    """
-
-    return lab2rgb(lch2lab(lch_arr))
-
-
-def rgb2lch(rgb_arr):
-    """
-    Converts RGB color space to LCH color space.
-
-    Args:
-        rgb_arr (np.ndarray): Input array in RGB color space.
-
-    Returns:
-        np.ndarray: Output array in LCH color space.
-    """
-    return lab2lch(rgb2lab(rgb_arr))
 
 
 # Mask generation functions
@@ -83,13 +54,12 @@ def mask_gen(mask_size, bright_area, Hdark_i, Hbright_i):
     return mask
 
 
-def edge_mask_gen(mask_size, bright_area, Hdark_i, Hbright_i):
+def edge_mask_gen(mask_size, Hdark_i, Hbright_i):
     """
     Generates an edge mask with a specified size and brightness.
 
     Args:
         mask_size (int): Size of the mask.
-        bright_area (int): Area of the mask that should be bright.
         Hdark_i (int): Dark intensity.
         Hbright_i (int): Bright intensity.
 
@@ -152,9 +122,9 @@ def dest_image(img, mask, bg_illum):
 
     return output
 
-def dest_image2(img, mask, fg_area, bg_avg_rgb, similar_contrast):
+def get_privacy_result(img, mask, fg_area, bg_avg_rgb, similar_contrast):
     """
-    Modifies the image based on the mask, foreground area, 
+    Modifies the image based on the mask, foreground area,
     average background color and similar contrast.
 
     Args:
@@ -177,7 +147,6 @@ def dest_image2(img, mask, fg_area, bg_avg_rgb, similar_contrast):
     else:
         bg_illum = rgb2lab(bg_avg_rgb)[0]
 
-    # print(f"bg_illum: {bg_illum}")
 
     if np.max(output) >= 1.0:
         lab_output = rgb2lab(output / 255.0)
@@ -188,15 +157,11 @@ def dest_image2(img, mask, fg_area, bg_avg_rgb, similar_contrast):
     assert bg_illum >= np.max(
         lab_output[fg_area][:, 0]
     ), "background illuminance must be brighter than the background's"
-    # print(f"before contrast improvements: {lab_output[595:600,440:460,0]}")
 
-    # contrast_diff = abs(bg_illum - lab_output[fg_area][:, 0])
-    # fg_illum = lab_output[fg_area][:, 0] + contrast_diff * similar_contrast / 10
 
     contrast_diff = abs(bg_illum)
     fg_illum = contrast_diff / 100 * similar_contrast
     lab_output[row, col, 0] = fg_illum
-    # print(f"after contrast improvements: {lab_output[595:600,440:460,0]}")
 
     return lab_output
 
@@ -233,12 +198,10 @@ def segment_bg(image):
     """
     assert len(image.shape) == 3, "the image must have three dimensions"
     assert np.max(image) > 100, "the image must be RGB format"
-    # tgt_img = rgb2lab(image)[..., 0]
     tgt_img = np.mean(image, axis=2)
     threshold = filters.threshold_li(tgt_img)
     fg = tgt_img < threshold
     bg = tgt_img >= threshold
-    # plt.imshow(tgt_img < threshold, cmap='gray')
     return bg, fg
 
 def dest_edges(img, mask, edges, bg_illum):
@@ -264,7 +227,7 @@ def dest_edges(img, mask, edges, bg_illum):
 # Image contour functions
 def get_contours(fg_area):
     """
-    Modifies the input image based on the given contour information and a specified radius.
+    Gets contours from an image.
     
     Args:
         image (np.array): A 2D numpy array representing the input image.
@@ -276,27 +239,24 @@ def get_contours(fg_area):
     """
     return cv2.findContours(fg_area.astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
 
-def dest_contours(fg_area, contours, interval):
+def draw_contour(fg_area, contours):
     """
-    Function to draw contours with a specific interval on an image.
+    Function to draw contours on an image.
 
     Args:
         fg_area (np.array): An array representing the foreground area of the image.
         contours (list): A list of contour arrays.
-        interval (int): The interval at which to draw contours.
 
     Returns:
         tuple: Two numpy arrays. The first contains the image with contours drawn at the specified interval.
                The second contains the image with all contours drawn.
     """
     contours_np = np.vstack(contours)
-    length = contours_np.shape[0]
-    a = np.zeros(fg_area.shape)
-    b = np.zeros(fg_area.shape).astype(np.uint8)
 
-    cv2.drawContours(a, contours_np[np.arange(0, length, interval), ::], -1, 1, 1)
-    cv2.drawContours(b, contours_np, -1, 1, 1)
-    return a, b
+    image_contour = np.zeros(fg_area.shape).astype(np.uint8)
+
+    cv2.drawContours(image_contour, contours_np, -1, 1, 1)
+    return image_contour
 
 
 def text_ocr(image):
@@ -339,7 +299,6 @@ def text_mask_gen(img, cell_size, text_width):
         mask[[0, 2], [0, 2]] = Hbright_i
     else:
         mask[[1], [1]] = Hbright_i
-    # mask = np.array([[Hbright_i, Hdark_i,],[Hdark_i, Hbright_i]])
 
     mask = np.tile(mask, (img.shape[0] // cell_size, img.shape[1] // cell_size))
     a = np.repeat(mask, cell_size, axis=0)
@@ -406,14 +365,14 @@ def stroke_width(text_fg):
     stroke_width = np.mean(center_pixel_distances) * 2
     return stroke_width, skeleton
 
-def dest_contour(image, contour, radius):
+def proc_contour(image, contour, radius):
     """
     Modifies the input image based on the given contour information and a specified radius.
     
     Args:
         image (np.array): A 2D numpy array representing the input image.
-        contour (list): A list of 2D points representing the contour of an object.
-        radius (int): The radius within which to modify the image. 
+        contour (list): A list of 2D points representing the contour of detected line-based elements.
+        radius (int): The radius within which influence the privacy level of processed line-based elements. 
     
     Returns:
         output (np.array): A 2D numpy array representing the modified image.
@@ -458,12 +417,10 @@ def dest_contour(image, contour, radius):
         bright_index_arr = offsets + np.array([row, col])
 
         output[min_row:max_row, min_col:max_col][:mask_size:2, 1:mask_size:2] = 0
-        # output[min_row:max_row, min_col:max_col][1:mask_size:2, 0:mask_size:2] = 0
         output[min_row:max_row, min_col:max_col][1:mask_size:2, :] = 0
         output[min_row:max_row, min_col:max_col] = output[min_row:max_row, min_col:max_col] * mask_arr
 
         tgt_list += bright_index_arr.tolist()
-    # print(f"mask size: {mask_size}")
     for arr in tgt_list:
 
         row = arr[0]
@@ -501,7 +458,6 @@ def run_ocr_in_chart(image, output, bg_avg_lab, bboxes):
         text_thresh = filters.threshold_li(rgb2gray(text_region))
         text_fg = rgb2gray(text_region) < text_thresh
         _, fg_area = segment_bg(text_region)
-        fg_avg_lab = np.mean(rgb2lab(text_region[fg_area]), axis=0)
 
         radius = int(np.min(text_region.shape[:2]) / 10)
         if radius >= 5:
@@ -514,9 +470,8 @@ def run_ocr_in_chart(image, output, bg_avg_lab, bboxes):
 
         row, col = np.where(skeleton == True)
         skeleton_cont = np.vstack((col, row)).T
-        result = dest_contour(text_fg_pad, skeleton_cont, radius)[radius:-radius, radius:-radius]
-        # output2 = test_dest_edges(image, result, bg_avg_rgb)
-        text_output = dest_text2(rgb2lab(text_region), result, bg_avg_lab, fg_avg_lab)
+        result = proc_contour(text_fg_pad, skeleton_cont, radius)[radius:-radius, radius:-radius]
+        text_output = dest_text2(rgb2lab(text_region), result, bg_avg_lab)
 
         output[tl[1] : br[1], tl[0] : br[0]] = (lab2rgb(text_output) * 255).astype(np.uint8)
 
