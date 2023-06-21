@@ -1,7 +1,7 @@
 # Privacy-preserving Visualization for Mobile Devices
 
 This repository contains the source code for our Eurovis 2023 paper, titled "Don't Peek at My Chart: Privacy-preserving Visualization for Mobile Devices." The project aims to provide a privacy-focused approach to data visualization on mobile devices, ensuring that sensitive information remains secure.
-<img src="./files/Teaser.png" width="500">
+<img src="./files/Teaser.png" width="800">
 
 ## Introduction
 
