@@ -38,6 +38,8 @@ $ git clone https://github.com/AlexanderZsh/Privacy-preserving-visualization.git
 - example_privacy_preserving_area.ipynb: This notebook provides an example of how to use the functions defined in back_algorithm.py to transform an area-based visual mark into a privacy-preserving visualization.
 - example_privacy_preserving_line.ipynb: Similarly, this notebook offers an example of applying the functions from back_algorithm.py to transform a line-based visual mark into a privacy-preserving visualization.
 
+### Key package
+
 | Name         | Version |
 | ------------ | ------- |
 | python       | 3.8.8   |
